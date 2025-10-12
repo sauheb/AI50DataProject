@@ -8,21 +8,21 @@ exports.handler = async (event, context) => {
   const staticResponse = await fetch(staticDataUrl);
   const staticData = await staticResponse.json();
   
-  // Get all tickers from static data
-  const tickers = staticData.map(stock => stock.ticker);
+  // Get all Tickers from static data
+  const Tickers = staticData.map(stock => stock.Ticker);
   
-  // Add comparison tickers
-  const allTickers = [...tickers, 'SPY', 'QQQ'];
+  // Add comparison Tickers
+  const allTickers = [...Tickers, 'SPY', 'QQQ'];
   
   // Fetch prices for all stocks (limit to 5 for testing)
-  const pricePromises = allTickers.slice(0, 5).map(async ticker => {
-    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${API_KEY}`;
+  const pricePromises = allTickers.slice(0, 5).map(async Ticker => {
+    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${Ticker}&apikey=${API_KEY}`;
     const response = await fetch(url);
     const data = await response.json();
     
     if (data['Global Quote']) {
       return {
-        ticker: ticker,
+        Ticker: Ticker,
         price: parseFloat(data['Global Quote']['05. price']).toFixed(2),
         change: data['Global Quote']['10. change percent']
       };
@@ -35,7 +35,7 @@ exports.handler = async (event, context) => {
   
   // Merge static data with live prices
   const liveData = staticData.map(stock => {
-    const priceData = validPrices.find(p => p.ticker === stock.ticker);
+    const priceData = validPrices.find(p => p.Ticker === stock.Ticker);
     if (priceData) {
       return {
         ...stock,
@@ -48,14 +48,14 @@ exports.handler = async (event, context) => {
   
   // Calculate AI50 index (simplified - just average of changes)
   const stockChanges = validPrices
-    .filter(p => p.ticker !== 'SPY' && p.ticker !== 'QQQ')
+    .filter(p => p.Ticker !== 'SPY' && p.Ticker !== 'QQQ')
     .map(p => parseFloat(p.change.replace('%', '')));
   
   const ai50Change = (stockChanges.reduce((a, b) => a + b, 0) / stockChanges.length).toFixed(2);
   
   // Get SPY and QQQ data
-  const spyData = validPrices.find(p => p.ticker === 'SPY');
-  const qqqData = validPrices.find(p => p.ticker === 'QQQ');
+  const spyData = validPrices.find(p => p.Ticker === 'SPY');
+  const qqqData = validPrices.find(p => p.Ticker === 'QQQ');
   
   const result = {
     lastUpdated: new Date().toISOString(),
