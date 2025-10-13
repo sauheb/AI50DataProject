@@ -4,7 +4,7 @@ exports.handler = async (event, context) => {
   const API_KEY = process.env.ALPHA_VANTAGE_API_KEY;
   
   // Fetch static data from GitHub
-  const staticDataUrl = 'https://raw.githubusercontent.com/sauheb/ai50-data/main/ai50-static.json';
+  const staticDataUrl = 'https://raw.githubusercontent.com/AI50DataProject/ai50-data/main/ai50-static.json';
   const staticResponse = await fetch(staticDataUrl);
   const staticData = await staticResponse.json();
   
