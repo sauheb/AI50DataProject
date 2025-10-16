@@ -15,7 +15,7 @@ exports.handler = async (event, context) => {
   const allTickers = [...Tickers, 'SPY', 'QQQ'];
   
   // Fetch prices for all stocks (limit to 5 for testing)
-  const pricePromises = allTickers.slice(0, 5).map(async Ticker => {
+  const pricePromises = allTickers.map(async ticker => {
     const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${Ticker}&apikey=${API_KEY}`;
     const response = await fetch(url);
     const data = await response.json();
